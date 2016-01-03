@@ -2,6 +2,7 @@ package org.jraf.android.aclock.view;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,6 +12,7 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.AttributeSet;
@@ -43,6 +45,11 @@ public class ClockView extends View {
      * How small the am/pm indicator is compared to hour / minutes.
      */
     private static final float AM_PM_SIZE_FACTOR = .26f;
+
+    /**
+     * Number of seconds in a day.
+     */
+    private static final long SECONDS_IN_DAY = TimeUnit.DAYS.toSeconds(1);
 
 
     private Time mTime;
@@ -128,10 +135,13 @@ public class ClockView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        mTime.setToNow();
+
+        setColors();
+
         int canvasWidth = canvas.getWidth();
         int canvasHeight = canvas.getHeight();
 
-        mTime.setToNow();
         String hourMinutesStr = getHourMinutes();
         String secondsStr = getSeconds();
         String dateStr = getDate();
@@ -231,6 +241,28 @@ public class ClockView extends View {
 
         // Draw the date
         canvas.drawText(dateStr, dateX, dateY, mDatePaint);
+    }
+
+    private void setColors() {
+        long secondIndex = TimeUnit.HOURS.toSeconds(mTime.hour) + TimeUnit.MINUTES.toSeconds(mTime.minute) + mTime.second;
+        float hourMinutesHue = 360f * secondIndex / SECONDS_IN_DAY;
+        // Add the date so it's different every day
+        hourMinutesHue = (hourMinutesHue + mTime.yearDay * 4) % 360;
+
+        // Hour minutes
+        int color = ColorUtils.HSLToColor(new float[] {hourMinutesHue, .87f, .75f});
+        mHourMinutesPaint.setColor(color);
+
+        // Seconds / am pm
+        float secondsHue = (hourMinutesHue - 45) % 360;
+        color = ColorUtils.HSLToColor(new float[] {secondsHue, .50f, .75f});
+        mSecondsPaint.setColor(color);
+        mAmPmPaint.setColor(color);
+
+        // Date
+        float dateHue = (hourMinutesHue + 180) % 360;
+        color = ColorUtils.HSLToColor(new float[] {dateHue, .90f, .70f});
+        mDatePaint.setColor(color);
     }
 
     private void adjustSecondsAndAmPmSizes() {
