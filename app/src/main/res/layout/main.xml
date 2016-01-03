@@ -1,0 +1,14 @@
+<FrameLayout android:id="@+id/vieBackgroundOpacity"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    tools:context=".app.MainActivity">
+
+    <org.jraf.android.aclock.view.ClockView
+        android:id="@+id/vieClock"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</FrameLayout>
