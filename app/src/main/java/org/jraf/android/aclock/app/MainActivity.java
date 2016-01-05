@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message message) {
             MainPrefs mainPrefs = MainPrefs.get(MainActivity.this);
             int hour = mVieClock.getTime().hour;
-            boolean isDay = 8 <= hour || hour < 23;
+            boolean isDay = 8 <= hour && hour < 23;
             if (isDay) {
                 if (mainPrefs.containsBrightnessDay()) {
                     setBrightness(mainPrefs.getBrightnessDay());
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
                 MainPrefs mainPrefs = MainPrefs.get(MainActivity.this);
                 int hour = mVieClock.getTime().hour;
-                boolean isDay = 8 <= hour || hour < 23;
+                boolean isDay = 8 <= hour && hour < 23;
                 if (left) {
                     // Brightness
                     if (isDay) {
