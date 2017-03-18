@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Handler to update the time periodically.
+     * Handler to update the brightness periodically.
      */
     private Handler mUpdateBrightnessHandler = new Handler() {
         @Override
